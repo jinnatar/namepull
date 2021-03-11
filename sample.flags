@@ -1,0 +1,4 @@
+--api=https://example.com/api/get
+--token=aaaaabbbbbbbccccccddddd
+--db_user=mad
+--db_pass=deadbeef
