@@ -3,3 +3,4 @@
 --db_user=mad
 --db_pass=deadbeef
 --db_host=localhost
+--verbosity=-1
