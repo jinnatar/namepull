@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "namepull"
-version = "0.1.0"
+version = "0.1.1"
 description = ""
 authors = ["Artanicus <artanicus@nocturnal.fi>"]
 license = "MIT"
