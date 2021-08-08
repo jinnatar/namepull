@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "namepull"
+version = "0.1.0"
+description = ""
+authors = ["Artanicus <artanicus@nocturnal.fi>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.7"
+aiohttp = "^3.7.4"
+absl-py = "^0.13.0"
+python-sql = "^1.2.2"
+PyMySQL = "^1.0.2"
+
+[tool.poetry.dev-dependencies]
+bumpversion = "^0.6.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+namepull = 'namepull:run'

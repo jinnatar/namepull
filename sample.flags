@@ -2,3 +2,4 @@
 --token=aaaaabbbbbbbccccccddddd
 --db_user=mad
 --db_pass=deadbeef
+--db_host=localhost

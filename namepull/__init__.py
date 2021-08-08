@@ -1,5 +1,3 @@
-#!/usr/bin/env python3.7
-
 import sys
 import asyncio
 import aiohttp
@@ -93,8 +91,12 @@ async def get_unknown_gyms():
 
 # Wrap asyncio.run for easy compatibilty with absl.app
 def main(argv):
+    del argv
     asyncio.run(get_unknown_gyms())
 
+# script endpoint installed by package
+def run():
+    app.run(main)
 
 if __name__ == '__main__':
-    app.run(main)
+    run()

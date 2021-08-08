@@ -1,4 +1,0 @@
-aiohttp
-absl-py
-python-sql
-pymysql
