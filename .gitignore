@@ -1,3 +1,4 @@
 *.flags
 !sample.flags
 __pycache__
+dist
