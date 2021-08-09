@@ -114,10 +114,10 @@ async def looper(interval):
     while True:
         logging.info('Querying now...')
         await get_unknown_gyms()
-        interval_seconds = pct_jitter(interval_seconds, 0.05)
+        jittered_interval = pct_jitter(interval_seconds, 0.05)
         logging.info(
-            f'Sleeping until next iteration in {interval_seconds:.2f}s')
-        await asyncio.sleep(interval_seconds)
+            f'Sleeping until next iteration in {jittered_interval:.2f}s')
+        await asyncio.sleep(jittered_interval)
 
 
 # Wrap asyncio.run for easy compatibilty with absl.app
