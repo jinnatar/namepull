@@ -6,29 +6,54 @@ import asyncio
 import backoff
 import json
 import math
+import os
 import pymysql
 import sys
 import time
 
 FLAGS = flags.FLAGS
 
-flags.DEFINE_string('api', None, 'API endpoint')
-flags.DEFINE_string('token', None, 'API token')
-flags.DEFINE_string('db', 'mad', 'MAD DB name')
-flags.DEFINE_string('db_host', '127.0.0.1', 'MAD DB host')
-flags.DEFINE_string('db_pass', None, 'MAD DB password')
-flags.DEFINE_string('db_user', None, 'MAD DB user')
-flags.DEFINE_integer('batchsize', '5', 'Queries per request')
-flags.DEFINE_integer(
-    'loop_interval', None,
-    'Interval in hours to poll repeatedly. A random 25% jitter is applied.')
+PREFIX = 'NAMEPULL'
 
-# API endpoint & token must be provided as flags
-flags.mark_flag_as_required("token")
-flags.mark_flag_as_required("api")
+flags.DEFINE_string('api', os.getenv(f'{PREFIX}_API', None), 'API endpoint')
+flags.DEFINE_string('token', os.getenv(f'{PREFIX}_TOKEN', None), 'API token')
+flags.DEFINE_string('db', os.getenv(f'{PREFIX}_DB', 'mad'), 'MAD DB name')
+flags.DEFINE_string('db_host', os.getenv(f'{PREFIX}_DB_HOST', '127.0.0.1'),
+                    'MAD DB host')
+flags.DEFINE_string('db_pass', os.getenv(f'{PREFIX}_DB_PASS', None),
+                    'MAD DB password')
+flags.DEFINE_string('db_user', os.getenv(f'{PREFIX}_DB_USER', None),
+                    'MAD DB user')
+flags.DEFINE_integer('batchsize', os.getenv(f'{PREFIX}_BATCHSIZE', 5),
+                     'Queries per request')
+flags.DEFINE_integer(
+    'loop_interval', os.getenv(f'{PREFIX}_LOOP_INTERVAL', None),
+    'Interval in hours to poll repeatedly. A random 5% jitter is applied.')
+
+
+def not_null(value):
+    return value is not None
+
+
+# API endpoint & token must be provided
+flags.register_validator('token',
+                         not_null,
+                         message='API token must be set',
+                         flag_values=FLAGS)
+flags.register_validator('api',
+                         not_null,
+                         message='API endpoint must be set',
+                         flag_values=FLAGS)
+
 # DB credentials are also mandatory and have no reasonable defaults
-flags.mark_flag_as_required("db_pass")
-flags.mark_flag_as_required("db_user")
+flags.register_validator('db_pass',
+                         not_null,
+                         message='DB password must be set',
+                         flag_values=FLAGS)
+flags.register_validator('db_user',
+                         not_null,
+                         message='DB user must be set',
+                         flag_values=FLAGS)
 
 
 # Helper to yield finite ranges of an iterable to chunk up work into batches
@@ -80,6 +105,7 @@ async def store_gyms(data, cursor, table, **kwargs) -> None:
 
 # Retrieve unknown gyms, resolve them & store them
 async def get_unknown_gyms():
+    logging.debug('Polling for unknown gyms')
     db = pymysql.connect(host=FLAGS.db_host,
                          user=FLAGS.db_user,
                          password=FLAGS.db_pass,
