@@ -1,4 +1,4 @@
-FROM python:3.9-slim-buster AS poetry_builder
+FROM python:3.11.0a5-slim-bullseye AS poetry_builder
 ENV POETRY_HOME="/opt/poetry"
 ENV PATH="$POETRY_HOME/bin:$PATH"
 RUN apt update && apt install -y curl
@@ -11,7 +11,7 @@ COPY namepull ./namepull
 COPY poetry.lock pyproject.toml ./
 RUN poetry build -f wheel
 
-FROM python:3.9-slim-buster
+FROM python:3.11.0a5-slim-bullseye
 WORKDIR /srv
 COPY --from=builder /build/dist/*.whl ./
 RUN pip install *.whl
