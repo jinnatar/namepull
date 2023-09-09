@@ -4,7 +4,7 @@ Retrieve gym names from a compatible API
 
 ## Prereqs
 
-- Python3.7 minimum. (aiohttp compatibility.)
+- Python3.8+, Docker images are built against 3.11
 - Already set up MAD DB with gyms with unknown names.
 
 ## Installation
@@ -19,8 +19,10 @@ pip3 install namepull
 
 ```
 # Get python-poetry:
-curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/install-poetry.py | python3 -
-# install deps in a venv and run:
+curl -sSL https://install.python-poetry.org | python -
+# install deps in a venv:
+poetry install
+# and run:
 poetry run namepull
 ```
 
