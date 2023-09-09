@@ -1,12 +1,12 @@
 [tool.poetry]
 name = "namepull"
-version = "0.3.2"
+version = "0.3.3"
 description = ""
 authors = ["Artanicus <artanicus@nocturnal.fi>"]
 license = "MIT"
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.8.1"
 aiohttp = "^3.7.4"
 absl-py = "^0.13.0"
 python-sql = "^1.2.2"
@@ -17,9 +17,66 @@ backoff = "^1.11.1"
 yapf = "^0.31.0"
 toml = "^0.10.2"
 
+[tool.poetry.group.dev.dependencies]
+black = "^23.9.0"
+mypy = "^1.5.1"
+flake8 = "^6.1.0"
+isort = "^5.12.0"
+flake8-bugbear = "^23.7.10"
+types-pymysql = "^1.1.0.1"
+tox = "^4.11.3"
+
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
 namepull = 'namepull:run'
+
+[tool.mypy]
+follow_imports = "silent"
+check_untyped_defs = true
+strict = true
+
+[[tool.mypy.overrides]]
+module = "absl"
+ignore_missing_imports = true
+[[tool.mypy.overrides]]
+module = "backoff"
+ignore_missing_imports = true
+[[tool.mypy.overrides]]
+module = "sql"
+ignore_missing_imports = true
+
+[tool.tox]
+legacy_tox_ini = """
+[tox]
+isolated_build = true
+env_list = py38, py311
+setenv = VIRTUALENV_DISCOVERY=pyenv
+
+[gh-actions]
+python =
+    3.8: py38
+    3.11: py311, lint
+
+[testenv:dev]
+allowlist_externals = poetry
+commands_pre =
+    poetry install --no-root --sync
+commands =
+    poetry run black .
+    poetry run isort .
+    poetry run flake8 .
+    poetry run mypy .
+
+[testenv:lint]
+allowlist_externals = poetry
+commands_pre =
+    poetry install --no-root --sync
+commands =
+    poetry run black --check .
+    poetry run isort --check .
+    poetry run flake8 .
+    poetry run mypy .
+"""
